@@ -1,0 +1,17 @@
+plugins {
+    id 'idea'
+    id 'eclipse'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://s01.oss.sonatype.org' }
+    mavenLocal()
+    gradlePluginPortal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+}
+
+version = '1.0.0'
+ext.appName = 'GdxFf'

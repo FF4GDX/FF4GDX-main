@@ -1,0 +1,11 @@
+plugins {
+    id 'libgdx.subproject-java'
+    id 'java-library'
+}
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-lib'
+
+dependencies {
+	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+}

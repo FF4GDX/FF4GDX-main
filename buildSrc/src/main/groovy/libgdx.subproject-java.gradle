@@ -1,0 +1,9 @@
+plugins {
+    id 'libgdx.common'
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+compileJava {
+    options.incremental = true
+}

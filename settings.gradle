@@ -1,0 +1,19 @@
+// Note from CosmicDan: This is automatic project detection. Any subdir with a build.gradle will
+// be included as a subproject. You can just rename a build.gradle file to temp. exclude it.
+// Thanks to https://stackoverflow.com/a/35270195
+rootDir.eachFileRecurse { f ->
+    if ( f.name == "build.gradle" ) {
+        // CosmicDan: Also exclude buildSrc since gradle grabs it automatically
+        if ( f.parentFile.name != "buildSrc" ) {
+            String relativePath = f.parentFile.absolutePath - rootDir.absolutePath
+            String projectName = relativePath.replaceAll("[\\\\\\/]", ":")
+            include projectName
+        }
+    }
+}
+
+// Nice project naming
+rootProject.name = "GdxFf"
+project(":lib").name = "GdxFfLib"
+project(":player").name = "GdxFfPlayer"
+project(":player-lwjgl3").name = "GdxFfPlayer-lwjgl3"
