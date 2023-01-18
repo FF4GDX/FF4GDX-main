@@ -1,0 +1,9 @@
+Put the following jars here:
+ffmpeg.jar
+ffmpeg-javadoc.jar
+ffmpeg-sources.jar
+javacpp.jar
+javacpp-javadoc.jar
+javacpp-sources.jar
+
+...for platform native jar's, e.g. ffmpeg-windows-x86_64.jar, they should be extracted to a subfolder.

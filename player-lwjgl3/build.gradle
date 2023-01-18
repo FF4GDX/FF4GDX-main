@@ -1,7 +1,7 @@
 buildscript {
-	repositories {
-		gradlePluginPortal()
-	}
+    repositories {
+        gradlePluginPortal()
+    }
 }
 
 plugins {
@@ -10,10 +10,10 @@ plugins {
 }
 
 if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_14)) {
-	apply plugin: 'org.beryx.runtime'
+    apply plugin: 'org.beryx.runtime'
 }
 else {
-	apply plugin: 'application'
+    apply plugin: 'application'
 }
 
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
@@ -28,47 +28,59 @@ compileJava {
 }
 
 dependencies {
-	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-	implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-	implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     implementation project(':GdxFfLib')
-	implementation project(':GdxFfPlayer')
+    implementation project(':GdxFfPlayer')
 }
 
 def os = System.properties['os.name'].toLowerCase()
+def arch = System.properties['os.arch'].toLowerCase()
 
 run {
-	workingDir = rootProject.file('assets').path
-	setIgnoreExitValue(true)
+    // defaults
+    //workingDir = rootProject.file('assets').path
+    workingDir = project.file('build/resources/main').path
+    ext.pathPlusNatives = System.getenv("PATH")
 
-	if (os.contains('mac')) {
-		// Required to run LWJGL3 Java apps on MacOS
-		jvmArgs += "-XstartOnFirstThread"
-	}
+    if (os.contains('win') && arch.contains('amd64')) {
+        ext.pathPlusNatives += System.getProperty("path.separator") + rootProject.file("/lib/include/windows-x86_64/").toString()
+    } else {
+        println("Warning: Unrecognized platform, stuff won't work!")
+    }
+    environment "PATH", pathPlusNatives
+
+    setIgnoreExitValue(true)
+
+    if (os.contains('mac')) {
+        // Required to run LWJGL3 Java apps on MacOS
+        jvmArgs += "-XstartOnFirstThread"
+    }
 }
 
 jar {
 // sets the name of the .jar file this produces to the name of the game or app.
-	archiveBaseName.set(appName)
+    archiveBaseName.set(appName)
 // using 'lib' instead of the default 'libs' appears to be needed by jpackageimage.
-	destinationDirectory = file("$project.buildDir/lib")
+    destinationDirectory = file("$project.buildDir/lib")
 // the duplicatesStrategy matters starting in Gradle 7.0; this setting works.
-	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-	dependsOn configurations.runtimeClasspath
-	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    dependsOn configurations.runtimeClasspath
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 // these "exclude" lines remove some unnecessary duplicate files in the output JAR.
-	exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
-	dependencies {
-		exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
-	}
+    exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
+    dependencies {
+        exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
+    }
 // setting the manifest makes the JAR runnable.
-	manifest {
-		attributes 'Main-Class': project.mainClassName
-	}
+    manifest {
+        attributes 'Main-Class': project.mainClassName
+    }
 // this last step may help on some OSes that need extra instruction to make runnable JARs.
-	doLast {
-		file(archiveFile).setExecutable(true, false)
-	}
+    doLast {
+        file(archiveFile).setExecutable(true, false)
+    }
 }
 
 if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_14)) {

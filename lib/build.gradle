@@ -8,4 +8,7 @@ eclipse.project.name = appName + '-lib'
 
 dependencies {
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    
+    implementation fileTree(dir: 'include', include: '*.jar')
+    api "games.rednblack.miniaudio:miniaudio:$miniaudioVersion"
 }

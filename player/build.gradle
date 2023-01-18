@@ -8,5 +8,9 @@ eclipse.project.name = appName + '-player'
 
 dependencies {
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
-    api "com.kotcrab.vis:vis-ui:1.5.0"
+    api project(':GdxFfLib')
+
+    // TEMPORARY: Already in lib, but just doing stuff in player for now
+    api fileTree(dir: '../include', include: '*.jar')
+    api "games.rednblack.miniaudio:miniaudio:$miniaudioVersion"
 }
