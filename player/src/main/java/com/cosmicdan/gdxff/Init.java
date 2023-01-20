@@ -3,30 +3,20 @@ package com.cosmicdan.gdxff;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.graphics.GL20;
+import com.cosmicdan.gdxff.player.PlayerGui;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Init implements ApplicationListener {
-	private Stage stage = null;
-	private Image videoImage = null;
+	PlayerGui player;
+	private boolean videoPlaying = false;
 
 	/**
 	 * Called when the {@link Application} is first created.
 	 */
 	@Override
 	public void create() {
-		stage = new Stage(new ScreenViewport());
-		Gdx.input.setInputProcessor(stage);
-
-		final Table root = new Table();
-		root.setFillParent(true);
-		stage.addActor(root);
-		videoImage = new Image();
-		root.add(videoImage).fill().align(Align.center);
+		player = new PlayerGui();
 	}
 
 	/**
@@ -37,8 +27,8 @@ public class Init implements ApplicationListener {
 	 * @param height the new height in pixels
 	 */
 	@Override
-	public void resize(int width, int height) {
-
+	public void resize(final int width, final int height) {
+		player.onResize(width, height);
 	}
 
 	/**
@@ -46,7 +36,8 @@ public class Init implements ApplicationListener {
 	 */
 	@Override
 	public void render() {
-
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		player.onRender();
 	}
 
 	/**
@@ -55,7 +46,7 @@ public class Init implements ApplicationListener {
 	 */
 	@Override
 	public void pause() {
-
+		player.onPause();
 	}
 
 	/**
@@ -63,7 +54,7 @@ public class Init implements ApplicationListener {
 	 */
 	@Override
 	public void resume() {
-
+		player.onResume();
 	}
 
 	/**
@@ -71,6 +62,6 @@ public class Init implements ApplicationListener {
 	 */
 	@Override
 	public void dispose() {
-
+		player.onDispose();
 	}
 }

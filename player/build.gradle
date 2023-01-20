@@ -7,10 +7,11 @@ plugins {
 eclipse.project.name = appName + '-player'
 
 dependencies {
-	api "com.badlogicgames.gdx:gdx:$gdxVersion"
-    api project(':GdxFfLib')
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.kotcrab.vis:vis-ui:1.5.0"
+    implementation project(':GdxFfLib')
 
     // TEMPORARY: Already in lib, but just doing stuff in player for now
-    api fileTree(dir: '../include', include: '*.jar')
-    api "games.rednblack.miniaudio:miniaudio:$miniaudioVersion"
+    implementation fileTree(dir: '../lib/include', include: '*.jar')
+    implementation "games.rednblack.miniaudio:miniaudio:$miniaudioVersion"
 }
