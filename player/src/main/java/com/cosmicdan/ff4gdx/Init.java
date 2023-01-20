@@ -1,10 +1,10 @@
-package com.cosmicdan.gdxff;
+package com.cosmicdan.ff4gdx;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.cosmicdan.gdxff.player.PlayerGui;
+import com.cosmicdan.ff4gdx.player.PlayerGui;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Init implements ApplicationListener {

@@ -1,4 +1,4 @@
-package com.cosmicdan.gdxff;
+package com.cosmicdan.ff4gdx;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;

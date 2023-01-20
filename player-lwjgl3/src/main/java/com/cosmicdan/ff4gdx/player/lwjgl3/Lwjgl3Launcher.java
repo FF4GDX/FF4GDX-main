@@ -1,8 +1,8 @@
-package com.cosmicdan.gdxff.player.lwjgl3;
+package com.cosmicdan.ff4gdx.player.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.cosmicdan.gdxff.Init;
+import com.cosmicdan.ff4gdx.Init;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
@@ -16,7 +16,7 @@ public class Lwjgl3Launcher {
 
 	private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
 		Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-		configuration.setTitle("GdxFfPlayer");
+		configuration.setTitle("FF4GDXPlayer");
 		configuration.useVsync(true);
 		//// Limits FPS to the refresh rate of the currently active monitor.
 		configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);

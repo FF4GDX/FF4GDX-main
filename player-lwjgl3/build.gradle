@@ -17,7 +17,7 @@ else {
 }
 
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
-mainClassName = 'com.cosmicdan.gdxff.player.lwjgl3.Lwjgl3Launcher'
+mainClassName = 'com.cosmicdan.ff4gdx.player.lwjgl3.Lwjgl3Launcher'
 eclipse.project.name = appName + '-player-lwjgl3'
 sourceCompatibility = 1.8
 
@@ -31,8 +31,8 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-    implementation project(':GdxFfLib')
-    implementation project(':GdxFfPlayer')
+    implementation project(':FF4GDXLib')
+    implementation project(':FF4GDXPlayer')
 }
 
 def os = System.properties['os.name'].toLowerCase()

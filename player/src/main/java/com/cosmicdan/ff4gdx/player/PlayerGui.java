@@ -1,4 +1,4 @@
-package com.cosmicdan.gdxff.player;
+package com.cosmicdan.ff4gdx.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.cosmicdan.gdxff.AssetManagerEx;
+import com.cosmicdan.ff4gdx.AssetManagerEx;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.file.FileChooser;

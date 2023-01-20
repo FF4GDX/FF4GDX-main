@@ -9,7 +9,7 @@ eclipse.project.name = appName + '-player'
 dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.kotcrab.vis:vis-ui:1.5.0"
-    implementation project(':GdxFfLib')
+    implementation project(':FF4GDXLib')
 
     // TEMPORARY: Already in lib, but just doing stuff in player for now
     implementation fileTree(dir: '../lib/include', include: '*.jar')

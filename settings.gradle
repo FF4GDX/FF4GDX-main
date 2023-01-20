@@ -13,7 +13,7 @@ rootDir.eachFileRecurse { f ->
 }
 
 // Nice project naming
-rootProject.name = "GdxFf"
-project(":lib").name = "GdxFfLib"
-project(":player").name = "GdxFfPlayer"
-project(":player-lwjgl3").name = "GdxFfPlayer-lwjgl3"
+rootProject.name = "FF4GDX"
+project(":lib").name = "FF4GDXLib"
+project(":player").name = "FF4GDXPlayer"
+project(":player-lwjgl3").name = "FF4GDXPlayer-lwjgl3"

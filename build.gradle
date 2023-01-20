@@ -2,4 +2,4 @@ plugins {
     id 'libgdx.common'
 }
 
-eclipse.project.name = 'GdxFf' + '-parent'
+eclipse.project.name = 'FF4GDX' + '-parent'

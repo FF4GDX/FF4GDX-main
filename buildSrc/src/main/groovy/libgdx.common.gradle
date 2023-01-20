@@ -14,4 +14,4 @@ repositories {
 }
 
 version = '1.0.0'
-ext.appName = 'GdxFf'
+ext.appName = 'FF4GDX'

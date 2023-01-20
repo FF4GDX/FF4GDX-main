@@ -1,4 +1,4 @@
-package com.cosmicdan.gdxff.player;
+package com.cosmicdan.ff4gdx.player;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.cosmicdan.gdxff.AssetManagerEx;
+import com.cosmicdan.ff4gdx.AssetManagerEx;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 
 import java.util.HashMap;
