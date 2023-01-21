@@ -1,0 +1,4 @@
+Assets
+ - FF4GDX by CosmicDan
+ - Player icons by Google - Material Symbols and Icons (Outlined, Default)
+ - 
