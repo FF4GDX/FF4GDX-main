@@ -24,7 +24,7 @@ public class AssetManagerEx extends AssetManager {
         //assetTextureParam.magFilter = TextureFilter.Linear;
     }
 
-    public AssetDescriptor<Texture> loadTexture(final String assetPath) {
+    public AssetDescriptor<Texture> loadTextureNow(final String assetPath) {
         final AssetDescriptor<Texture> assetDesc = new AssetDescriptor<>(assetPath, Texture.class, assetTextureParam);
         load(assetDesc);
         finishLoading();

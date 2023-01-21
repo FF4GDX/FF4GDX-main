@@ -6,9 +6,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
@@ -30,21 +30,14 @@ import java.nio.ByteBuffer;
 /**
  * @author Daniel 'CosmicDan' Connolly
  */
-public class PlayerGui {
+public class PlayerGui implements IPlayerActions {
     // resource-related constants
-    public static final float BUTTON_BAR_SIZE_BUTTON = 44.0f;
     public static final float FADE_ANIM_TIME = 0.2f;
     private static final float MIN_GUI_FPS = 30.0f;
 
     // resources
     private final AssetManagerEx assets;
     private final AssetDescriptor<Texture> logoAsset;
-    private final AssetDescriptor<Texture> buttonBarBgAsset;
-    private final AssetDescriptor<Texture> iconMenuAsset;
-    private final AssetDescriptor<Texture> iconInfoAsset;
-    private final AssetDescriptor<Texture> iconOpenAsset;
-    private final AssetDescriptor<Texture> iconPlayAsset;
-    private final AssetDescriptor<Texture> iconVolMuteAsset;
 
     // player gui related things
     private final Stage stage;
@@ -52,25 +45,17 @@ public class PlayerGui {
     private final Image videoImage;
     private final Cell<Image> videoImageCell;
     private final TextureRegionDrawable logoTexDrawable;
-    private final Table buttonRow;
-    private final Cell<Table> buttonRowLeftCell;
-    private final Cell<Table> buttonRowMidCell;
-    private final Cell<Table> buttonRowRightCell;
-    private final ButtonBarHandler buttonbar;
-    private FileChooser openFileChooser = null;
+    private final FileChooser openFileChooser;
+
+    private ButtonBarHandler buttonBar;
 
     public PlayerGui() {
         // setup assets
         assets = new AssetManagerEx();
 
-        // load all player assets
-        logoAsset = assets.loadTexture("bg.png");
-        buttonBarBgAsset = assets.loadTexture("buttonBarBg.png");
-        iconMenuAsset = assets.loadTexture("icon_menu.png");
-        iconInfoAsset = assets.loadTexture("icon_info.png");
-        iconOpenAsset = assets.loadTexture("icon_open.png");
-        iconPlayAsset = assets.loadTexture("icon_play.png");
-        iconVolMuteAsset = assets.loadTexture("icon_vol_mute.png");
+        // load essential player assets (except button bar)
+        logoAsset = assets.loadTextureNow("bg.png");
+
 
         // start visui
         VisUI.setSkipGdxVersionCheck(true);
@@ -91,45 +76,32 @@ public class PlayerGui {
         videoImage = new Image();
         videoImage.setScaling(Scaling.fit);
         videoImageCell = rootTable.add(videoImage);
-        // logo texture for video image
+        // logo texture for FF4GDX image
         final Texture logoTex = assets.get(logoAsset);
         logoTexDrawable = new TextureRegionDrawable(new TextureRegion(logoTex));
-        // assign icon to image as default
+        // assign FF4GDX logo to image as default
         videoImage.setDrawable(logoTexDrawable);
         rootTable.row();
 
-        // button row
-        buttonRow = new Table();
-        final Drawable buttonBarBg = new TextureRegionDrawable(new TextureRegion(assets.get(buttonBarBgAsset)));
-        buttonRow.setBackground(buttonBarBg);
-        rootTable.add(buttonRow);
-        final Table buttonRowLeft = new Table();
-        buttonRowLeft.left();
-        buttonRowLeft.pack();
-        final Table buttonRowMid = new Table();
-        buttonRowMid.center();
-        final Table buttonRowRight = new Table();
-        buttonRowRight.right();
-        buttonRowLeftCell = buttonRow.add(buttonRowLeft);
-        buttonRowMidCell = buttonRow.add(buttonRowMid);
-        buttonRowRightCell = buttonRow.add(buttonRowRight);
+        // TODO: lwjgl3-only file chooser
+        FileChooser.setDefaultPrefsName(getClass().getPackage().getName());
+        openFileChooser = new FileChooser(Mode.OPEN);
+        openFileChooser.setCenterOnAdd(false);
+        openFileChooser.setDirectory(Gdx.files.getLocalStoragePath());
+        openFileChooser.setSelectionMode(SelectionMode.FILES);
 
-        buttonbar = new ButtonBarHandler(assets);
-        buttonRowLeft.add(buttonbar.newButton(iconInfoAsset, this::clickedInfo)).size(BUTTON_BAR_SIZE_BUTTON);
-        buttonRowLeft.add(buttonbar.newButton(iconVolMuteAsset, this::clickedVolume)).size(BUTTON_BAR_SIZE_BUTTON);
-        buttonRowRight.add(buttonbar.newButton(iconOpenAsset, this::clickedOpen)).size(BUTTON_BAR_SIZE_BUTTON);
-        buttonRowRight.add(buttonbar.newButton(iconMenuAsset, this::clickedMenu)).size(BUTTON_BAR_SIZE_BUTTON);
-        buttonRowMid.add(buttonbar.newButton(iconPlayAsset, this::clickedPlay)).size(BUTTON_BAR_SIZE_BUTTON);
+        openFileChooser.setListener(new FileChooserAdapter() {
+            @Override
+            public void selected(final Array<FileHandle> files) {
+                openFile(files.first().file().getAbsolutePath());
+            }
+        });
 
-        setupFileChooser();
-
-        // TODO: better "disabled" theme
-        buttonbar.setButtonDisabled(iconVolMuteAsset, true);
-        buttonbar.setButtonDisabled(iconPlayAsset, true);
-
-        Gdx.graphics.setContinuousRendering(false);
         //root.setDebug(true, true);
         //buttonRow.setDebug(true, true);
+
+        // TODO: FF4GDX needs handling for non-continuous rendering...
+        //Gdx.graphics.setContinuousRendering(false);
     }
 
     // TODO --------------------------------------
@@ -142,13 +114,13 @@ public class PlayerGui {
     private int videoAvPixFmt;
     long lastTimeStamp = -1L;
     private PlaybackTimer playbackTimer;
-    private Pixmap[] decodeBuffer = new Pixmap[10];
 
 
     // TODO: for lib
     private void handleDecoding() throws FrameGrabber.Exception {
         if (grabber != null) {
             // update pixel format if changed
+            // TODO: make this optional, usually only needs to be done once per file
             if (grabber.getPixelFormat() != videoAvPixFmt) {
                 final int videoAvPixFmtOld = videoAvPixFmt;
                 videoAvPixFmt = grabber.getPixelFormat();
@@ -167,6 +139,8 @@ public class PlayerGui {
             }
             lastTimeStamp = frameRaw.timestamp;
             final Pixmap framePixmap = convertFrame(frameRaw);
+            // TODO: pixmap buffering
+
 
             System.out.println("Decoded a single frame in " + playbackTimer.elapsedMicrosecs() / 1000.0f + "ms");
             grabber.close();
@@ -212,29 +186,15 @@ public class PlayerGui {
 
     final void openFile(final String filePath) {
         System.out.println("Open file: " + filePath);
+
+
+
         grabber = new FFmpegFrameGrabber(filePath);
         try {
             grabber.start();
-        } catch (FFmpegFrameGrabber.Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        /*
-        try (final FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(filePath)) {
-            grabber.start();
-            final PlaybackTimer playbackTimer = new PlaybackTimer();
-
-
-        } catch (final FFmpegFrameGrabber.Exception exception) {
-            System.out.println("[!] Exception from FFmpegFrameGrabber");
-            throw new RuntimeException(exception);
-        } catch (final FrameGrabber.Exception exception) {
-            System.out.println("[!] Exception from FrameGrabber (base)");
+        } catch (FFmpegFrameGrabber.Exception exception) {
             throw new RuntimeException(exception);
         }
-
-         */
     }
     // TODO --------------------------------------
     //      --------------------------------------
@@ -242,66 +202,60 @@ public class PlayerGui {
     //      --------------------------------------
     //      --------------------------------------
 
-    private void setupFileChooser() {
-        FileChooser.setDefaultPrefsName(getClass().getPackage().getName());
-        openFileChooser = new FileChooser(Mode.OPEN);
-        openFileChooser.setCenterOnAdd(false);
-        openFileChooser.setDirectory(Gdx.files.getLocalStoragePath());
-        openFileChooser.setSelectionMode(SelectionMode.FILES);
-
-        openFileChooser.setListener(new FileChooserAdapter() {
-            @Override
-            public void selected(final Array<FileHandle> files) {
-                openFile(files.first().file().getAbsolutePath());
-            }
-        });
-    }
-
-    private void clickedPlay(final VisImageButton buttonPlay) {
+    @Override
+    public void actionPlay(final VisImageButton buttonPlay) {
 
     }
 
-    private void clickedMenu(final VisImageButton buttonMenu) {
+    @Override
+    public void actionMenu(final VisImageButton buttonMenu) {
 
     }
 
-    private void clickedOpen(final VisImageButton actor) {
+    @Override
+    public void actionOpen(final VisImageButton actor) {
         stage.addActor(openFileChooser.fadeIn(FADE_ANIM_TIME));
     }
 
-    private void clickedInfo(final VisImageButton actor) {
+    @Override
+    public void actionInfo(final VisImageButton actor) {
         //actor.setFocusBorderEnabled(false);
         // TODO - overlay text
     }
 
-
-    private void clickedVolume(final VisImageButton visImageButton) {
+    @Override
+    public void actionVolume(final VisImageButton actor) {
 
     }
 
     public final void onResize(final int width, final int height) {
         stage.getViewport().update(width, height, true);
-        // center + pad the buttons
-        final float buttonBarParts = 3.0f;
-        final float buttonBarPartWidth = width / buttonBarParts;
-        buttonRow.setWidth(width);
-        buttonRowLeftCell.width(buttonBarPartWidth);
-        buttonRowMidCell.width(buttonBarPartWidth);
-        buttonRowRightCell.width(buttonBarPartWidth);
+        onResizeButtonBar(width, height);
+    }
 
-
-        final float openDialogWidth = width * 0.5f;
-        openFileChooser.setWidth(openDialogWidth);
-        openFileChooser.setHeight(height - buttonRowLeftCell.getPrefHeight());
-        openFileChooser.setPosition(width - openDialogWidth, height);
-
+    private final void onResizeButtonBar(final int width, final int height) {
+        if (buttonBar != null) {
+            buttonBar.onResize(width, height);
+            final float openDialogWidth = width * 0.5f;
+            openFileChooser.setWidth(openDialogWidth);
+            openFileChooser.setHeight(height - buttonBar.getPrefHeight());
+            openFileChooser.setPosition(width - openDialogWidth, height);
+        }
     }
 
     public final void onRender() {
-        try {
-            handleDecoding();
-        } catch (FrameGrabber.Exception e) {
-            throw new RuntimeException(e);
+        if (buttonBar == null) {
+            // create button bar
+            buttonBar = new ButtonBarHandler(assets, rootTable, this);
+            // need to call resize again to get buttonBar sizing right
+            onResizeButtonBar(MathUtils.floor(stage.getWidth()), MathUtils.floor(stage.getHeight()));
+            buttonBar.setState(ButtonBarHandler.State.NOTHING_OPEN);
+        } else {
+            try {
+                handleDecoding();
+            } catch (FrameGrabber.Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / MIN_GUI_FPS)); // default 30.0f
         stage.draw();
