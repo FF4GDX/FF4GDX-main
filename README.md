@@ -2,13 +2,21 @@
 
 An FFmpeg subsystem for libGDX
 
-## PRE-RELEASE NOTICE
 
-[NB: As of time of writing, not only is FF4GDX pre-release, but it is incomplete. The library is NOT finished, there are no downloads - I am still in progress of merging working code from private working experiments so there will also be a lot of missig documentation or un-optimized code]
+
+## PROTOTYPE NOTICE
+
+FF4GDX is currently incomplete but in rapid development. The library is has NOT even started yet, everything is currently in the reference player (which isn't working as of writing - still in the process of "porting" the initial working code over). So take everything below with a grain of salt for the moment - even this document is a WIP :)
+
+
+
+## PRE-RELEASE NOTICE
 
 This is PRE-RELEASE SOFTWARE. Note that this is not "alpha" or "beta", it is designed to be functional and stable - so bug reports ARE WELCOME. All kinds of testers and code reviewers and hackers of all experience levels are encouraged to get in touch. Please see Contributing section on how you can help :)
 
 If you want to learn more about using the library, reading this entire readme is highly encouraged. I have, however, strived to document as much code as possible - so feel free to just jump right in and take a look at `FF4GDX` for how to use the lib, or `FF4GDXPlayer` for a reference implementation of a video player. 
+
+
 
 ## Introduction
 
@@ -26,11 +34,15 @@ FF4GDX provides the capability to use FFmpeg sources within a libGDX project. Th
 
 - ...more? Suggestions welcome!
 
+
+
 ## Platform + Hardware support
 
 - LWJGL3 (Win64 only, Linux TODO and Mac is very TODO)
 
 - TODO: Android (requires extra work + sample code for LGPL compliance, see FAQ)
+
+
 
 ## Project Overview
 
@@ -46,7 +58,9 @@ FF4GDX consists of:
 
 The subsystem is contained within the `FF4GDX`class which must be created during the *launcher* of your GDX project, then `start`ed during creation, then additionally `tick`ed and `render`ed every render call. Additionally it requires the same `resize`, `pause`, `resume` and `dispose`  to be called from your GDX activity. These are all static methods, their purpose being to help faciliate resource management when streaming multiple sources.
 
-`FFsAsset` is an abstract class, used by 
+`FFsAsset` is an abstract class, used by [...]
+
+
 
 ## FAQ
 
@@ -60,6 +74,10 @@ FF4GDX includes FFmpeg, which is an LGPLv3 build. All non-free and GPL decoders 
 
 ...these issues are not difficult to solve, just time consuming. And I'd rather work on the core project more for the moment. It is somewhat moderate on my mental priority, however.
 
-##### Mac support?
+##### MacOS and/or iOS support?
 
-I believe I need an actuall installation of MacOSX in order to build the natives. Either that, or I can just use stock java-presets build which won't include av1 decoder, and possibly other things... but even then I can't test it personally.
+Unfortunately I cannot personally provide MacOS support since I do not have a Mac system, and building on Mac is required for HW-accelerated decoder linking (with the OS, since my FFmpeg builds only have free decoders).
+
+iOS is likely never going to happen due to, as far as I am aware, the complete inability to comply with the LGPL on this system. Also I don't have an iPhone nor know nothing about developing for it. Sorry, I personally have to draw the line somewhere!
+
+**With that said, the project is open-source so contributions are welcome.** If you want to help maintain a Mac build, and/or can provide a working solution to LGPL compliance under iOS, then please get in touch! 
