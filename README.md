@@ -38,7 +38,7 @@ FF4GDX provides the capability to use FFmpeg sources within a libGDX project. Th
 
 ## Platform + Hardware support
 
-- LWJGL3 (Win64 only, Linux TODO and Mac is very TODO)
+- LWJGL3 (Win64 for now, Linux TODO but high priorty, Mac is indefinitely unsupported - see FAQ re: Mac and iOS)
 
 - TODO: Android (requires extra work + sample code for LGPL compliance, see FAQ)
 
@@ -64,7 +64,7 @@ The subsystem is contained within the `FF4GDX`class which must be created during
 
 ## FAQ
 
-##### Android support?
+### Android support?
 
 FF4GDX includes FFmpeg, which is an LGPLv3 build. All non-free and GPL decoders are disabled, though AV1 decoding is provided via libdav1d since it is a royalty-free format. Android has two specific issues related to this situation:
 
@@ -74,7 +74,7 @@ FF4GDX includes FFmpeg, which is an LGPLv3 build. All non-free and GPL decoders 
 
 ...these issues are not difficult to solve, just time consuming. And I'd rather work on the core project more for the moment. It is somewhat moderate on my mental priority, however.
 
-##### MacOS and/or iOS support?
+### MacOS and/or iOS support?
 
 Unfortunately I cannot personally provide MacOS support since I do not have a Mac system, and building on Mac is required for HW-accelerated decoder linking (with the OS, since my FFmpeg builds only have free decoders).
 
