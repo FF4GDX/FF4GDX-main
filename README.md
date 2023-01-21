@@ -34,6 +34,8 @@ FF4GDX provides the capability to use FFmpeg sources within a libGDX project. Th
 
 - ...more? Suggestions welcome!
 
+**1***: Refer to "Why miniaudio dependency?" in the FAQ below 
+
 
 
 ## Platform + Hardware support
@@ -63,6 +65,12 @@ The subsystem is contained within the `FF4GDX`class which must be created during
 
 
 ## FAQ
+
+### Why miniaudio dependency?
+
+A few reasons. The TL;DR is that miniaudio is just a better default. libGDX's default OpenAL implementation works fine, but is very basic. It only supports 2 channel (Stereo) max for example. It also has latency issues on Android. Further, miniaudio has some nice features for sound stream manipulation, mixing, and 3D positioning - which are great to have for game and app developers alike.
+
+If there is any demand for it, I may add support for stock OpenAL anyway, and/or support for TuningFork and Oboe. All 4 would be great to be honest, but for now hopefully miniaudio is a capable default for all target platforms (Win/Linux/Android).
 
 ### Android support?
 
